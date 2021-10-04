@@ -90,7 +90,10 @@
     var itemsPurchaseParsed = [];
     LS.cart.items.map(item => {
         itemsPurchaseParsed.push({
-            ...item,
+            'id': item.variant_id,
+            'name': item.name,
+            'unit_price': item.unit_price,
+            'quantity': item.quantity,
             'google_business_vertical': 'retail'
         })
     });
