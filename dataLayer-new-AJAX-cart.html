@@ -40,7 +40,6 @@
                         sku: productData[0].sku,
                         unit_price: productData[0].price_number,
                         url: document.location.href + '?variant=' + productData[0].id,
-                        variant_id: productData[0].id,
                         google_business_vertical: 'retail'
                     });
                 } else {
@@ -56,7 +55,6 @@
                         sku: productData[0].sku,
                         unit_price: productData[0].price_number,
                         url: productLink + '?variant=' + productData[0].id,
-                        variant_id: productData[0].id,
                         google_business_vertical: 'retail'
                     });
                 }
@@ -120,7 +118,6 @@
                 sku: JSON.parse(container.getAttribute('data-variants'))[0].sku,
                 unit_price: JSON.parse(container.getAttribute('data-variants'))[0].price_number,
                 url: container.querySelector('a').getAttribute('href'),
-                variant_id: JSON.parse(container.getAttribute('data-variants'))[0].id,
                 google_business_vertical: 'retail'
             });
         });
