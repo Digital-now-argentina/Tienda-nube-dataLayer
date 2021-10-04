@@ -1,0 +1,30 @@
+<!-- Google Tag Manager - Data Layer-->
+<script>
+    window.dataLayer = window.dataLayer || [];
+    if (window.location.pathname.split('/')[1] == 'productos' && window.location.pathname.split('/')[2] != '') {
+        window.dataLayer.push({
+            'event': 'Ver producto',
+            'price': LS.variants[0].price_long,
+            'product': LS.product
+        });
+    }
+    if (window.location.pathname.split('/')[1] == 'comprar') {
+        window.dataLayer.push({
+            'event': 'Agregar al carrito',
+            'value': LS.cart.subtotal / 100,
+            'items': LS.cart.items
+        });
+    }
+    if (window.location.pathname.split('/')[1] == 'checkout' && window.location.pathname.split('/')[3] == 'success') {
+        window.dataLayer.push({
+            'event': 'Compra',
+            'value': LS.order.total / 100,
+            'items': LS.cart.items
+        });
+    }
+
+    window.dataLayer.push({
+        'event': 'view_item_list',
+        'product': impression_field_object
+    });
+</script>

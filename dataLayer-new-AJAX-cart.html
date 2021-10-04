@@ -1,0 +1,135 @@
+<!-- Google Tag Manager - Data Layer - Dynamic Remarketing-->
+<!--View_item event-->
+<script>
+    var dataLayer = window.dataLayer || [];
+    if (window.location.pathname.split('/')[1] == 'productos' && window.location.pathname.split('/')[2] != '') {
+        window.dataLayer.push({
+            'event': 'view_item',
+            'view_item_value': LS.variants[0].price_number,
+            'view_items': [{
+                'id': LS.product.id,
+                'name': LS.product.name,
+                'google_business_vertical': 'retail'
+            }]
+        });
+    }
+</script>
+<!--Add_to_cart event-->
+<script>
+    var dataLayer = window.dataLayer || [];
+    var addToCart = document.querySelectorAll('.js-addtocart.js-prod-submit-form');
+    var itemsCartParsed = itemsCartParsed || [];
+    LS.cart.items.map(item => {
+        itemsCartParsed.push({
+            ...item,
+            google_business_vertical: 'retail'
+        });
+    });
+    addToCart.forEach(cartButton => {
+        cartButton.addEventListener('click', function () {
+            window.setTimeout(function () {
+
+                if (window.location.pathname.split('/')[1] == 'productos' && window.location.pathname.split('/')[2] != '') {
+                    var productData = JSON.parse(document.querySelector('.js-product-detail').getAttribute('data-variants'));
+                    var productName = document.querySelector('.js-product-name').innerText;
+                    itemsCartParsed.push({
+                        id: productData[0].id,
+                        name: productName,
+                        quantity: 1,
+                        requires_shipping: true,
+                        sku: productData[0].sku,
+                        unit_price: productData[0].price_number,
+                        url: document.location.href + '?variant=' + productData[0].id,
+                        variant_id: productData[0].id,
+                        google_business_vertical: 'retail'
+                    });
+                } else {
+                    var productName = cartButton.closest('.js-item-product').querySelector('.js-item-name').innerText;
+                    var productLink = cartButton.closest('.item-actions').querySelector('a').href;
+                    var productData = JSON.parse(cartButton.closest('.js-item-product').children[0].getAttribute('data-variants'));
+
+                    itemsCartParsed.push({
+                        id: productData[0].id,
+                        name: productName,
+                        quantity: 1,
+                        requires_shipping: true,
+                        sku: productData[0].sku,
+                        unit_price: productData[0].price_number,
+                        url: productLink + '?variant=' + productData[0].id,
+                        variant_id: productData[0].id,
+                        google_business_vertical: 'retail'
+                    });
+                }
+                window.dataLayer.push({
+                    'event': 'add_to_cart',
+                    'cart_id': LS.cart.id,
+                    'cart_value': LS.data.cart.total / 100,
+                    'cart_items': itemsCartParsed
+                });
+            }, 2000)
+        });
+    });
+    var toggleCart = document.querySelectorAll('.js-toggle-cart');
+    toggleCart.forEach(cartButton => {
+        cartButton.addEventListener('click', function () {
+            var deleteItemButtons = document.querySelectorAll('.cart-item-delete');
+            deleteItemButtons.forEach(deleteButton => {
+                deleteButton.addEventListener('click', function () {
+                    var urlDeletedItem = deleteButton.closest('.js-cart-item').querySelector('a').getAttribute('href');
+                    itemsCartParsed.forEach((item, index) => {
+                        if (item.url == urlDeletedItem) {
+                            itemsCartParsed.splice(index, 1);
+                        }
+                    })
+                })
+            });
+        });
+    });
+</script>
+<!--Purchase event-->
+<script>
+    var dataLayer = window.dataLayer || [];
+    var itemsPurchaseParsed = [];
+    LS.cart.items.map(item => {
+        itemsPurchaseParsed.push({
+            ...item,
+            'google_business_vertical': 'retail'
+        })
+    });
+    if (window.location.pathname.split('/')[1] == 'checkout' && window.location.pathname.split('/')[3] == 'success') {
+        window.dataLayer.push({
+            'event': 'purchase',
+            'purchase_value': LS.order.total / 100,
+            'purchase_items': itemsPurchaseParsed
+        });
+    }
+</script>
+<!--View_item_list event-->
+<script>
+    var dataLayer = window.dataLayer || [];
+    var whenToFire = ['search', 'lentes-de-sol', 'armazones', 'lentes-de-contacto', 'liquidos'];
+    if (whenToFire.includes(window.location.pathname.split('/')[1])) {
+        var itemsListParsed = [];
+        var productContainers = document.querySelectorAll('.js-product-container');
+        productContainers.forEach(container => {
+            itemsListParsed.push({
+                id: JSON.parse(container.getAttribute('data-variants'))[0].id,
+                name: container.querySelector('a').getAttribute('title'),
+                quantity: 1,
+                requires_shipping: true,
+                sku: JSON.parse(container.getAttribute('data-variants'))[0].sku,
+                unit_price: JSON.parse(container.getAttribute('data-variants'))[0].price_number,
+                url: container.querySelector('a').getAttribute('href'),
+                variant_id: JSON.parse(container.getAttribute('data-variants'))[0].id,
+                google_business_vertical: 'retail'
+            });
+        });
+        if (itemsListParsed.length > 0) {
+            window.dataLayer.push({
+                'event': 'view_item_list',
+                'products': itemsListParsed
+            });
+        }
+    }
+</script>
+<!-- END Google Tag Manager - Data Layer - Dynamic Remarketing-->

@@ -1,0 +1,21 @@
+<!-- GAds purchase conversion-->
+<script>
+    if (window.location.pathname.split('/')[1] === "checkout" && window.location.pathname.split('/')[3] === "success") {                              
+        function toBeExecutedOnFirstLoad() {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'page_type': 'purchase',
+                'event': 'digitalnow_purchase',
+                'currency': 'ARS',
+                'totalValue': LS.order.total / 100,
+                'payment_type': LS.order.gateway,
+                'transaction_id': LS.order.id
+            });
+        }
+        if (localStorage.getItem(LS.order.id) === null) {
+            toBeExecutedOnFirstLoad();
+            localStorage.setItem(LS.order.id, 'true');
+        }
+    }
+    </script> 
+    <!-- GAds purchase conversion-->
